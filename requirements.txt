@@ -1,0 +1,17 @@
+category_encoders
+deepctr
+environs
+flask
+gevent
+greenlet
+grpcio
+grpcio-tools
+gunicorn
+lightgbm
+numpy
+locust
+pandas
+scikit-learn
+sklearn
+tensorflow
+xgboost
