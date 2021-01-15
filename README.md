@@ -75,5 +75,5 @@ docker pull autodeployai/ai-serving
 ```bash
 TEST_FILE=tf_serving_http.py
 
-locust -f ${TEST_FILE} --headless --run-time=1m -u=50 -r=1000
+locust -f ${TEST_FILE} --headless --run-time=30s -u=50 -r=1000
 ```

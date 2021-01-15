@@ -18,5 +18,6 @@ pandas
 scikit-learn
 sklearn
 tensorflow
+tensorflow-serving-api
 tf2onnx
 xgboost
