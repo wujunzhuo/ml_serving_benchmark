@@ -1,4 +1,4 @@
-# serving_benchmark
+# ml_serving_benchmark
 
 ### 1. 拉取Docker镜像
 
