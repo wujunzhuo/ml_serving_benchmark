@@ -14,6 +14,7 @@ MODEL_PATH = env.str('MODEL_PATH', './models/lgb')
 MODEL_TYPE = env.str('MODEL_TYPE', 'lgb')
 ONNX_MODEL_PATH = env.str('ONNX_MODEL_PATH', './models/onnx')
 
+
 initial_type = [('float_input', FloatTensorType([1, 39]))]
 if MODEL_TYPE == 'xgb':
     model = xgb.XGBClassifier()

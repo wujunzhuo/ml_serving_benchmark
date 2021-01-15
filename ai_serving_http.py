@@ -13,7 +13,7 @@ class Test(locust.HttpUser):
 
     def on_start(self):
         self.data = [0.5 for _ in range(13)] + [1 for _ in range(26)]
-        self.headers = {'Content-type': 'application/json'}
+        self.headers = {'Content-Type': 'application/json'}
 
     @locust.task
     def predict(self):

@@ -62,7 +62,7 @@ docker pull autodeployai/ai-serving
   5. 发布模型
 
       ```bash
-      curl -X PUT --data-binary @models/onnx -H "Content-Type: x-protobuf"  http://localhost:9090/v1/models/lgb
+      curl -X PUT --data-binary @models/onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/lgb
       ```
 
 - flask
