@@ -1,34 +1,37 @@
 import numpy as np
 import lightgbm as lgb
 import xgboost as xgb
-# import tensorflow as tf
+import tensorflow as tf
 from environs import Env
 from flask import Flask, request, jsonify
-# from deepctr.layers import custom_objects
+from deepctr.layers import custom_objects
 
 
 app = Flask(__name__)
 env = Env()
-model_path = env.str('MODEL_PATH', './models/xgb')
-model_type = env.str('MODEL_TYPE', 'xgb')
+MODEL_PATH = env.str('MODEL_PATH', './models/xgb')
+MODEL_TYPE = env.str('MODEL_TYPE', 'xgb')
 
-if model_type == 'xgb':
-    model = xgb.Booster(model_file=model_path)
-elif model_type == 'lgb':
-    model = lgb.Booster(model_file=model_path)
-# elif model_type == 'deepctr':
-#     model = tf.keras.models.load_model(model_path, custom_objects)
+if MODEL_TYPE == 'xgb':
+    model = xgb.Booster(model_file=MODEL_PATH)
+elif MODEL_TYPE == 'lgb':
+    model = lgb.Booster(model_file=MODEL_PATH)
+elif MODEL_TYPE == 'deepctr':
+    model = tf.keras.models.load_model(MODEL_PATH, custom_objects)
 else:
-    raise TypeError(f'模型类型错误：{model_type}')
+    raise TypeError(f'模型类型错误：{MODEL_TYPE}')
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = np.array(request.json['inputs'])
-    if model_type == 'xgb':
-        pred = model.predict(xgb.DMatrix(data)).tolist()
-    elif model_type == 'lgb':
-        pred = model.predict(data).tolist()
+    req = request.json
+    data = np.array(req['inputs'])
+
+    if MODEL_TYPE == 'xgb':
+        pred = model.predict(xgb.DMatrix(data))
+    elif MODEL_TYPE == 'lgb':
+        pred = model.predict(data)
     else:
-        pred = None
-    return jsonify(pred=pred)
+        pred = model.predict([data[:, i] for i in range(data.shape[1])])
+
+    return jsonify(pred=pred.tolist())

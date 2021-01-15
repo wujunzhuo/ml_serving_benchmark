@@ -7,11 +7,16 @@ greenlet
 grpcio
 grpcio-tools
 gunicorn
+keras2onnx
 lightgbm
 numpy
 locust
+onnx
+onnxconverter-common
+onnxmltools
 pandas
 scikit-learn
 sklearn
 tensorflow
+tf2onnx
 xgboost

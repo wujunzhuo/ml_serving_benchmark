@@ -30,7 +30,7 @@ docker pull autodeployai/ai-serving
 
 - tf-serving
   ```bash
-  docker run --rm -it -p 8500:8500 -p 8501:8501 -v ${PWD}/models/dcn:/models/dcn/1 -e MODEL_NAME=dcn tensorflow/serving
+  docker run --rm -it -p 8500:8500 -p 8501:8501 -v ${PWD}/models/dcn:/models/dcn/1:ro -e MODEL_NAME=dcn tensorflow/serving
   ```
 
 - ai-serving
@@ -75,5 +75,5 @@ docker pull autodeployai/ai-serving
 ```bash
 TEST_FILE=tf_serving_http.py
 
-locust -f ${TEST_FILE} --headless -u 50 -r 1000
+locust -f ${TEST_FILE} --headless --run-time=1m -u=50 -r=1000
 ```
