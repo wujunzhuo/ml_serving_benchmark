@@ -40,7 +40,7 @@ docker pull autodeployai/ai-serving
   2. 生成protobuf和grpc的代码
 
       ```bash
-      python -m grpc_tools.protoc -I=./proto --python_out=. --grpc_python_out=. ai-serving.proto
+      python -m grpc_tools.protoc -I=./proto --python_out=. --grpc_python_out=. ai-serving.proto onnx-ml.proto
       ```
 
   3. 将模型转换为ONNX格式
