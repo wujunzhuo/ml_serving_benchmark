@@ -5,4 +5,4 @@ proto
 *_pb2_grpc.py
 
 data/*
-models/*
+outputs/*

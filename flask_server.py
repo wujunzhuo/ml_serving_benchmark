@@ -9,7 +9,7 @@ from deepctr.layers import custom_objects
 
 app = Flask(__name__)
 env = Env()
-MODEL_PATH = env.str('MODEL_PATH', './models/xgb')
+MODEL_PATH = env.str('MODEL_PATH', './outputs/xgb')
 MODEL_TYPE = env.str('MODEL_TYPE', 'xgb')
 
 if MODEL_TYPE == 'xgb':

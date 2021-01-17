@@ -21,7 +21,7 @@ docker pull autodeployai/ai-serving
 - 启动训练
 
     ```bash
-    mkdir models
+    mkdir outputs
 
     python train.py
     ```
@@ -29,8 +29,9 @@ docker pull autodeployai/ai-serving
 ### 3. 启动服务
 
 - tf-serving
+
   ```bash
-  docker run --rm -it -p 8500:8500 -p 8501:8501 -v ${PWD}/models/dcn:/models/dcn/1:ro -e MODEL_NAME=dcn tensorflow/serving
+  docker run --rm -it -p 8500:8500 -p 8501:8501 -v ${PWD}/outputs/dcn:/models/dcn/1:ro -e MODEL_NAME=dcn tensorflow/serving
   ```
 
 - ai-serving
@@ -62,10 +63,11 @@ docker pull autodeployai/ai-serving
   5. 发布模型
 
       ```bash
-      curl -X PUT --data-binary @models/onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/lgb
+      curl -X PUT --data-binary @outputs/onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/lgb
       ```
 
 - flask
+
   ```
   gunicorn flask_server:app
   ```

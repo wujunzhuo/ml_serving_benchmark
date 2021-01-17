@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 import lightgbm as lgb
 import xgboost as xgb
@@ -14,9 +15,12 @@ env = Env()
 DATA_PATH = env.str('DATA_PATH', './data/train_1m.txt')
 DATA_NROWS = env.int('DATA_NROWS', 100000)
 RANDOM_SEED = env.int('RANDOM_SEED', 2020)
-MODEL_PATH_XGB = env.str('MODEL_PATH_XGB', './models/xgb')
-MODEL_PATH_LGB = env.str('MODEL_PATH_LGB', './models/lgb')
-MODEL_PATH_DCN = env.str('MODEL_PATH_DCN', './models/dcn')
+TRANS_PATH_IMPUTER = env.str('TRANS_PATH_IMPUTER', './outputs/imputer')
+TRANS_PATH_SCALER = env.str('TRANS_PATH_SCALER', './outputs/scaler')
+TRANS_PATH_ENCODER = env.str('TRANS_PATH_ENCODER', './outputs/encoder')
+MODEL_PATH_XGB = env.str('MODEL_PATH_XGB', './outputs/xgb')
+MODEL_PATH_LGB = env.str('MODEL_PATH_LGB', './outputs/lgb')
+MODEL_PATH_DCN = env.str('MODEL_PATH_DCN', './outputs/dcn')
 
 label = 'label'
 dense_feat = ['I' + str(i) for i in range(1, 14)]
@@ -37,23 +41,25 @@ train_y = train_df.loc[:, label]
 valid_X = valid_df.loc[:, dense_feat + sparse_feat]
 valid_y = valid_df.loc[:, label]
 
-
 print('缺失值填充')
 imputer = SimpleImputer(strategy='mean')
 train_X[dense_feat] = imputer.fit_transform(train_X[dense_feat])
 valid_X[dense_feat] = imputer.transform(valid_X[dense_feat])
 train_X[sparse_feat] = train_X[sparse_feat].fillna('')
 valid_X[sparse_feat] = valid_X[sparse_feat].fillna('')
+joblib.dump(imputer, TRANS_PATH_IMPUTER)
 
 print('连续型变量数值归一化')
 scaler = MinMaxScaler()
 train_X[dense_feat] = scaler.fit_transform(train_X[dense_feat])
 valid_X[dense_feat] = scaler.transform(valid_X[dense_feat])
+joblib.dump(scaler, TRANS_PATH_SCALER)
 
 print('离散型变量字典编码')
-enc = OrdinalEncoder(cols=sparse_feat)
-train_X[sparse_feat] = enc.fit_transform(train_X[sparse_feat]) + 1
-valid_X[sparse_feat] = enc.transform(valid_X[sparse_feat]) + 1
+encoder = OrdinalEncoder(cols=sparse_feat)
+train_X[sparse_feat] = encoder.fit_transform(train_X[sparse_feat]) + 1
+valid_X[sparse_feat] = encoder.transform(valid_X[sparse_feat]) + 1
+joblib.dump(encoder, TRANS_PATH_ENCODER)
 
 print('XGBoost模型')
 model = xgb.XGBClassifier(

@@ -10,9 +10,9 @@ from onnxmltools.convert import convert_xgboost, convert_lightgbm, \
 
 
 env = Env()
-MODEL_PATH = env.str('MODEL_PATH', './models/lgb')
+MODEL_PATH = env.str('MODEL_PATH', './outputs/lgb')
 MODEL_TYPE = env.str('MODEL_TYPE', 'lgb')
-ONNX_MODEL_PATH = env.str('ONNX_MODEL_PATH', './models/onnx')
+ONNX_PATH = env.str('ONNX_PATH', './outputs/onnx')
 
 
 initial_type = [('float_input', FloatTensorType([1, 39]))]
@@ -31,4 +31,4 @@ elif MODEL_TYPE == 'deepctr':
 else:
     raise TypeError(f'模型类型错误：{MODEL_TYPE}')
 
-onnx.save(onx, ONNX_MODEL_PATH)
+onnx.save(onx, ONNX_PATH)
