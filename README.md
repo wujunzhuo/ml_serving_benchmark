@@ -60,10 +60,16 @@ docker pull autodeployai/ai-serving
       docker run --rm -it -p 9090:9090 -p 9091:9091 -v ${MODEL_VOLUME_PATH}:/opt/ai-serving autodeployai/ai-serving
       ```
 
-  5. 发布模型
+  5. 发布变换函数
 
       ```bash
-      curl -X PUT --data-binary @outputs/onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/lgb
+      curl -X PUT --data-binary @outputs/trans.onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/trans
+      ```
+
+  6. 发布模型
+
+      ```bash
+      curl -X PUT --data-binary @outputs/lgb.onnx -H "Content-Type: application/x-protobuf"  http://localhost:9090/v1/models/lgb
       ```
 
 - flask

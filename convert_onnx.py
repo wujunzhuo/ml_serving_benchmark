@@ -13,37 +13,41 @@ from onnxmltools.convert import convert_xgboost, convert_lightgbm, \
 
 env = Env()
 TRANS_PATH = env.str('TRANS_PATH', './outputs/trans')
-MODEL_PATH = env.str('MODEL_PATH', './outputs/lgb')
-MODEL_TYPE = env.str('MODEL_TYPE', 'lgb')
+MODEL_PATH_XGB = env.str('MODEL_PATH_XGB', './outputs/xgb')
+MODEL_PATH_LGB = env.str('MODEL_PATH_LGB', './outputs/lgb')
+MODEL_PATH_DCN = env.str('MODEL_PATH_DCN', './outputs/dcn')
 ONNX_TRANS_PATH = env.str('TRANS_PATH', './outputs/trans.onnx')
-ONNX_MODEl_PATH = env.str('ONNX_PATH', './outputs/model.onnx')
+ONNX_MODEl_PATH_XGB = env.str('ONNX_MODEl_PATH_XGB', './outputs/xgb.onnx')
+ONNX_MODEl_PATH_LGB = env.str('ONNX_MODEl_PATH_LGB', './outputs/lgb.onnx')
+ONNX_MODEl_PATH_DCN = env.str('ONNX_MODEl_PATH_DCN', './outputs/dcn.onnx')
 
 
 trans_initial_type = [
-    ('num_feat', FloatTensorType([None, 13])),
-    ('cat_feat', StringTensorType([None, 26]))
+    ('num_feat', FloatTensorType([1, 13])),
+    ('cat_feat', StringTensorType([1, 26]))
 ]
-model_initial_type = [('feat', FloatTensorType([None, 39]))]
+model_initial_type = [('num_feat', FloatTensorType([1, 39]))]
 
 
+print('convert sklearn')
 trans = joblib.load(TRANS_PATH)
 onx = convert_sklearn(trans, initial_types=trans_initial_type)
 onnx.save(onx, ONNX_TRANS_PATH)
 
 
-if MODEL_TYPE == 'xgb':
-    model = xgb.XGBClassifier()
-    model.load_model(MODEL_PATH)
-    onx = convert_xgboost(model, initial_types=model_initial_type)
-elif MODEL_TYPE == 'lgb':
-    model = lgb.Booster(model_file=MODEL_PATH)
-    onx = convert_lightgbm(model, initial_types=model_initial_type)
-elif MODEL_TYPE == 'deepctr':
-    graph_def, inputs, outputs = from_saved_model(MODEL_PATH, None, None)
-    tf.compat.v1.disable_eager_execution()
-    onx = convert_tensorflow(
-        graph_def, input_names=inputs, output_names=outputs)
-else:
-    raise TypeError(f'模型类型错误：{MODEL_TYPE}')
+print('convert XGBoost')
+model = xgb.XGBClassifier()
+model.load_model(MODEL_PATH_XGB)
+onx = convert_xgboost(model, initial_types=model_initial_type)
+onnx.save(onx, ONNX_MODEl_PATH_XGB)
 
-onnx.save(onx, ONNX_MODEl_PATH)
+
+print('convert LightGBM')
+model = lgb.Booster(model_file=MODEL_PATH_LGB)
+onx = convert_lightgbm(model, initial_types=model_initial_type)
+onnx.save(onx, ONNX_MODEl_PATH_LGB)
+
+graph_def, inputs, outputs = from_saved_model(MODEL_PATH_DCN, None, None)
+tf.compat.v1.disable_eager_execution()
+onx = convert_tensorflow(graph_def, input_names=inputs, output_names=outputs)
+onnx.save(onx, ONNX_MODEl_PATH_DCN)
