@@ -16,6 +16,7 @@ onnxconverter-common
 onnxmltools
 pandas
 scikit-learn
+skl2onnx
 sklearn
 tensorflow
 tensorflow-serving-api
