@@ -31,6 +31,7 @@ df = pd.read_csv(
     DATA_PATH, delimiter='\t', header=None, nrows=DATA_NROWS,
     keep_default_na=False, na_values='',
     names=[label] + num_feat + cat_feat)
+df[num_feat] = df[num_feat].fillna(-9.9)
 df[cat_feat] = df[cat_feat].fillna('')
 
 print('拆分训练/验证集')
@@ -43,7 +44,7 @@ valid_X = valid_df.loc[:, num_feat + cat_feat]
 
 print('数据变换')
 num_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='mean')),
+    ('imputer', SimpleImputer(missing_values=-9.9, strategy='mean')),
     ('scaler', MinMaxScaler()),
 ])
 cat_transformer = Pipeline(steps=[

@@ -17,7 +17,7 @@ class Test(locust.User):
         self.stub = DeploymentServiceStub(channel)
 
         num_data = [
-            None, 2, None, 0.0, None, None, 0.0, 450.0, 1.0, None, 0.0, None,
+            -9.9, 2, -9.9, 0.0, -9.9, -9.9, 0.0, 450.0, 1.0, -9.9, 0.0, -9.9,
             1.0
         ]
         num_values = [Value(number_value=x) for x in num_data]

@@ -12,7 +12,7 @@ class Test(locust.HttpUser):
 
     def on_start(self):
         self.data = [
-            None, 2, None, 0.0, None, None, 0.0, 450.0, 1.0, None, 0.0, None,
+            -9.9, 2, -9.9, 0.0, -9.9, -9.9, 0.0, 450.0, 1.0, -9.9, 0.0, -9.9,
             1.0, '05db9164', '08d6d899', '77f2f2e5', 'd16679b9', '25c83c98',
             '7e0ccccf', 'af0809a5', '5b392875', '7cc72ec2', '3b08e48b',
             '9e12e146', '9f32b866', '025225f2', '07d13a8f', '41f10449',
