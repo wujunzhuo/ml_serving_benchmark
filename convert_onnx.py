@@ -23,30 +23,32 @@ ONNX_MODEl_PATH_DCN = env.str('ONNX_MODEl_PATH_DCN', './outputs/dcn.onnx')
 
 
 trans_initial_type = [
-    ('num_feat', FloatTensorType([1, 13])),
-    ('cat_feat', StringTensorType([1, 26]))
+    ('num_feat', FloatTensorType([None, 13])),
+    ('cat_feat', StringTensorType([None, 26]))
 ]
-model_initial_type = [('num_feat', FloatTensorType([1, 39]))]
+model_initial_type = [('num_feat', FloatTensorType([None, 39]))]
 
 
-print('convert sklearn')
+print('convert sklearn transformer')
 trans = joblib.load(TRANS_PATH)
 onx = convert_sklearn(trans, initial_types=trans_initial_type)
 onnx.save(onx, ONNX_TRANS_PATH)
 
 
-print('convert XGBoost')
+print('convert XGBoost model')
 model = xgb.XGBClassifier()
 model.load_model(MODEL_PATH_XGB)
 onx = convert_xgboost(model, initial_types=model_initial_type)
 onnx.save(onx, ONNX_MODEl_PATH_XGB)
 
 
-print('convert LightGBM')
+print('convert LightGBM model')
 model = lgb.Booster(model_file=MODEL_PATH_LGB)
 onx = convert_lightgbm(model, initial_types=model_initial_type)
 onnx.save(onx, ONNX_MODEl_PATH_LGB)
 
+
+print('convert DCN model')
 graph_def, inputs, outputs = from_saved_model(MODEL_PATH_DCN, None, None)
 tf.compat.v1.disable_eager_execution()
 onx = convert_tensorflow(graph_def, input_names=inputs, output_names=outputs)

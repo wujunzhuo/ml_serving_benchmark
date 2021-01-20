@@ -33,7 +33,8 @@ docker pull autodeployai/ai-serving
   ```bash
   docker run --rm -it \
     -p 8500:8500 -p 8501:8501 \
-    -v ${PWD}/outputs/dcn:/models/dcn/1:ro -e MODEL_NAME=dcn \
+    -v ${PWD}/outputs/dcn:/models/dcn/1:ro \
+    -e MODEL_NAME=dcn \
     tensorflow/serving
   ```
 

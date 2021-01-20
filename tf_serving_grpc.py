@@ -7,8 +7,8 @@ from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 
 
 env = Env()
-MODEL_NAME = env.str('MODEL_NAME', 'dcn')
 HOST = env.str('HOST', 'localhost:8500')
+DATA_SIZE = env.int('DATA_SIZE', 100)
 
 
 class Test(locust.User):
@@ -18,13 +18,15 @@ class Test(locust.User):
         self.stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
 
         self.request = predict_pb2.PredictRequest()
-        self.request.model_spec.name = MODEL_NAME
+        self.request.model_spec.name = 'dcn'
 
-        data = tf.make_tensor_proto([[0.5]], dtype=tf.float32)
+        data = tf.make_tensor_proto(
+            [[0.5] for _ in range(DATA_SIZE)], dtype=tf.float32)
         for i in range(1, 14):
             self.request.inputs[f'I{i}'].CopyFrom(data)
 
-        data = tf.make_tensor_proto([[1]], dtype=tf.int32)
+        data = tf.make_tensor_proto(
+            [[1] for _ in range(DATA_SIZE)], dtype=tf.int32)
         for i in range(1, 27):
             self.request.inputs[f'C{i}'].CopyFrom(data)
 
